@@ -155,16 +155,29 @@ package com.sourcestream.flex.http
             _uri = uri;
         }
 
+        /**
+         * Gets the content type of the request body.
+         *
+         * @return Content type of the request
+         */
         public function get contentType():String
         {
             return _contentType;
         }
 
+        /**
+         * Sets the content type of the request body.
+         *
+         * @param contentType Content type of the request
+         */
         public function set contentType(contentType:String):void
         {
             _contentType = contentType;
         }
 
+        /**
+         * Creates a socket and adds CONNECT and SOCKET_DATA event listeners.
+         */
         private function createSocket():void
         {
             if (socket == null && _host != null && _port != null)
@@ -175,36 +188,65 @@ package com.sourcestream.flex.http
             }
         }
 
+        /**
+         * Performs a GET operation.
+         * @param uri URI on which to perform the GET
+         */
         public function doGet(uri:String):void
         {
             sendRequest(METHOD_GET, uri);
         }
 
+        /**
+         * Performs a POST operation.
+         * @param uri URI on which to perform the POST
+         */
         public function doPost(uri:String, body:String):void
         {
             sendRequest(METHOD_POST, uri, body);
         }
 
+        /**
+         * Performs a PUT operation.
+         * @param uri URI on which to perform the PUT
+         */
         public function doPut(uri:String, body:String):void
         {
             sendRequest(METHOD_PUT, uri, body);
         }
 
+        /**
+         * Performs a DELETE operation.
+         * @param uri URI on which to perform the DELETE
+         */
         public function doDelete(uri:String):void
         {
             sendRequest(METHOD_DELETE, uri);
         }
 
+        /**
+         * Performs a HEAD operation.
+         * @param uri URI on which to perform the HEAD
+         */
         public function doHead(uri:String):void
         {
             sendRequest(METHOD_HEAD, uri, _body);
         }
 
+        /**
+         * Performs a OPTIONS operation.
+         * @param uri URI on which to perform the OPTIONS
+         */
         public function doOptions(uri:String, body:String=""):void
         {
             sendRequest(METHOD_OPTIONS, uri, body);
         }
 
+        /**
+         * Called by the client to initiate sending a request.
+         *
+         * @param body Body of request
+         */
         public function send(body:String=null):void
         {
             _body = body;
@@ -212,6 +254,13 @@ package com.sourcestream.flex.http
             socket.connect(_host, parseInt(_port));
         }
 
+        /**
+         * Called internally to initiate sending a request.
+         *
+         * @param method HTTP method
+         * @param uri Path to resource
+         * @param body Request body
+         */
         private function sendRequest(method:String, uri:String, body:String=""):void
         {
             createSocket();
@@ -222,6 +271,11 @@ package com.sourcestream.flex.http
             _body = body;
         }
 
+        /**
+         * Handler for the socket's CONNECT event.
+         *
+         * @param event CONNECT event
+         */
         private function connectHandler(event:Event):void
         {
             var requestLine:String = _method + " " + _uri + " HTTP/1.0\n";
@@ -236,6 +290,11 @@ package com.sourcestream.flex.http
             socket.flush();
         }
 
+        /**
+         * Handler for the socket's SOCKET_DATA event.
+         *
+         * @param event SOCKET_DATA event
+         */
         private function dataHandler(event:ProgressEvent):void
         {
             var rawResponse:String = socket.readUTFBytes(event.bytesLoaded);
