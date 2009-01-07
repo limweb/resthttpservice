@@ -135,11 +135,21 @@ package com.sourcestream.flex.http
             _method = method;
         }
 
+        /**
+         * Gets the path to the HTTP resource (minus the host and port information).
+         *
+         * @return Path to HTTP resource
+         */
         public function get uri():String
         {
             return _uri;
         }
 
+        /**
+         * Sets the path to the HTTP resource (minus the host and port information).
+         *
+         * @param uri Path to HTTP resource
+         */
         public function set uri(uri:String):void
         {
             _uri = uri;
