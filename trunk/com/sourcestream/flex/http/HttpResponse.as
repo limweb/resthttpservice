@@ -25,6 +25,9 @@
  */
 package com.sourcestream.flex.http
 {
+    /**
+     * This class encapsulates information pertinent to an HTTP response such as status code, HTTP headers, and body.
+     */
     public class HttpResponse
     {
         private var _statusCode:int;
@@ -32,6 +35,14 @@ package com.sourcestream.flex.http
         private var _headers:Object = new Object();
         private var _body:String = "";
 
+        /**
+         * Construct an HTTP response.
+         *
+         * @param statusCode HTTP status code
+         * @param statusMessage Status description
+         * @param headers HTTP headers
+         * @param body Response body
+         */
         public function HttpResponse(statusCode:int, statusMessage:String, headers:Object, body:String="")
         {
             _statusCode = statusCode;
@@ -40,21 +51,41 @@ package com.sourcestream.flex.http
             _body = body;
         }
 
+        /**
+         * Gets the HTTP status code (200, 201, 404, etc.).
+         *
+         * @return HTTP status code
+         */
         public function get statusCode():int
         {
             return _statusCode;
         }
 
+        /**
+         * Gets the HTTP status description ("OK", "Created", "Not Found", etc.).
+         *
+         * @return HTTP status description
+         */
         public function get statusMessage():String
         {
             return _statusMessage;
         }
 
+        /**
+         * Gets a collection of HTTP header objects.
+         *
+         * @return HTTP header objects
+         */
         public function get headers():Object
         {
             return _headers;
         }
 
+        /**
+         * Gets the body of the HTTP response.
+         *
+         * @return Body of HTTP response
+         */
         public function get body():String
         {
             return _body;

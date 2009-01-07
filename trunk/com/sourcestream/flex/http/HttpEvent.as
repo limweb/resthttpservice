@@ -27,6 +27,9 @@ package com.sourcestream.flex.http
 {
     import flash.events.DataEvent;
 
+    /**
+     * This class add HTTP-specific values to the existing DataEvent class.
+     */
     public class HttpEvent extends DataEvent
     {
         public var response:HttpResponse;
