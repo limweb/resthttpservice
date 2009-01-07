@@ -2,9 +2,8 @@
  * The MIT License
  *
  * Copyright (c) 2008
- * United Nations Office at Geneva
- * Center for Advanced Visual Analytics
- * http://cava.unog.ch
+ * Dustin R. Callaway
+ * http://www.sourcestream.com/
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
