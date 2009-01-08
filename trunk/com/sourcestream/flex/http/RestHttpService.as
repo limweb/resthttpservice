@@ -58,7 +58,7 @@ package com.sourcestream.flex.http
         private var _method:String;
         private var _uri:String;
         private var _body:String;
-        private var _contentType:String = "text/plain";
+        private var _contentType:String;
 
         /**
          * Constructs a new REST HTTP service object.
@@ -282,8 +282,16 @@ package com.sourcestream.flex.http
             var now:Date = new Date();
             var headers:String = "Date: " + DAYS[now.day] + ", " + now.date + " " + MONTHS[now.month] + " " +
                 now.fullYear + " " + now.hours + ":" + now.minutes + ":" + now.seconds + "\n";
-            headers += "Content-Type: " + _contentType + "\n";
-            headers += "Content-Length: " + _body.length + "\n";
+
+            if (_contentType != null)
+            {
+                headers += "Content-Type: " + _contentType + "\n";
+            }
+
+            if (_body != null)
+            {
+                headers += "Content-Length: " + _body.length + "\n";
+            }
 
             socket.writeUTFBytes(requestLine + headers + "\n" + _body);
             socket.flush();
