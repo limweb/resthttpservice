@@ -56,7 +56,7 @@ package com.sourcestream.flex.http
         private var _host:String;
         private var _port:String;
         private var _method:String;
-        private var _uri:String;
+        private var _path:String;
         private var _body:String;
         private var _contentType:String;
 
@@ -135,23 +135,23 @@ package com.sourcestream.flex.http
         }
 
         /**
-         * Gets the path to the HTTP resource (minus the host and port information).
+         * Gets the path to the resource (minus the host and port information).
          *
-         * @return Path to HTTP resource
+         * @return Path to resource
          */
-        public function get uri():String
+        public function get path():String
         {
-            return _uri;
+            return _path;
         }
 
         /**
-         * Sets the path to the HTTP resource (minus the host and port information).
+         * Sets the path to the resource (minus the host and port information).
          *
-         * @param uri Path to HTTP resource
+         * @param path Path to resource
          */
-        public function set uri(uri:String):void
+        public function set path(path:String):void
         {
-            _uri = uri;
+            _path = path;
         }
 
         /**
@@ -189,56 +189,62 @@ package com.sourcestream.flex.http
 
         /**
          * Performs a GET operation.
-         * @param uri URI on which to perform the GET
+         *
+         * @param path Path to resource on which to perform the GET
          */
-        public function doGet(uri:String):void
+        public function doGet(path:String):void
         {
-            sendRequest(METHOD_GET, uri);
+            sendRequest(METHOD_GET, path);
         }
 
         /**
          * Performs a POST operation.
-         * @param uri URI on which to perform the POST
+         *
+         * @param path Path to resource on which to perform the POST
          */
-        public function doPost(uri:String, body:String):void
+        public function doPost(path:String, body:String):void
         {
-            sendRequest(METHOD_POST, uri, body);
+            sendRequest(METHOD_POST, path, body);
         }
 
         /**
          * Performs a PUT operation.
-         * @param uri URI on which to perform the PUT
+         *
+         * @param path Path to resource on which to perform the PUT
          */
-        public function doPut(uri:String, body:String):void
+        public function doPut(path:String, body:String):void
         {
-            sendRequest(METHOD_PUT, uri, body);
+            sendRequest(METHOD_PUT, path, body);
         }
 
         /**
          * Performs a DELETE operation.
-         * @param uri URI on which to perform the DELETE
+         *
+         * @param path Path to resource on which to perform the DELETE
          */
-        public function doDelete(uri:String):void
+        public function doDelete(path:String):void
         {
-            sendRequest(METHOD_DELETE, uri);
+            sendRequest(METHOD_DELETE, path);
         }
 
         /**
          * Performs a HEAD operation.
-         * @param uri URI on which to perform the HEAD
+         *
+         * @param path Path to resource on which to perform the HEAD
          */
-        public function doHead(uri:String):void
+        public function doHead(path:String):void
         {
-            sendRequest(METHOD_HEAD, uri, _body);
+            sendRequest(METHOD_HEAD, path, _body);
         }
 
         /**
          * Performs a OPTIONS operation.
-         * @param uri URI on which to perform the OPTIONS
+         *
+         * @param path Path to resource on which to perform the OPTIONS
          */
-        public function doOptions(uri:String, body:String=""):void
+        public function doOptions(path:String, body:String=""):void
         {
-            sendRequest(METHOD_OPTIONS, uri, body);
+            sendRequest(METHOD_OPTIONS, path, body);
         }
 
         /**
@@ -257,16 +263,16 @@ package com.sourcestream.flex.http
          * Called internally to initiate sending a request.
          *
          * @param method HTTP method
-         * @param uri Path to resource
+         * @param path Path to resource
          * @param body Request body
          */
-        private function sendRequest(method:String, uri:String, body:String=""):void
+        private function sendRequest(method:String, path:String, body:String=""):void
         {
             createSocket();
             socket.connect(_host, parseInt(_port));
 
             _method = method;
-            _uri = uri;
+            _path = path;
             _body = body;
         }
 
@@ -277,7 +283,7 @@ package com.sourcestream.flex.http
          */
         private function connectHandler(event:Event):void
         {
-            var requestLine:String = _method + " " + _uri + " HTTP/1.0\n";
+            var requestLine:String = _method + " " + _path + " HTTP/1.0\n";
 
             var now:Date = new Date();
             var headers:String = "Date: " + DAYS[now.day] + ", " + now.date + " " + MONTHS[now.month] + " " +
