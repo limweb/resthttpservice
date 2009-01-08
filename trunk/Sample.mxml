@@ -24,52 +24,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  -->
-<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:ss="com.sourcestream.flex.http.*"
-    creationComplete="init()">
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:rest="com.sourcestream.flex.http.*">
 
     <mx:Script><![CDATA[
-import com.sourcestream.flex.http.HttpEvent;
         import mx.controls.Alert;
+        import com.sourcestream.flex.http.HttpEvent;
         import com.sourcestream.flex.http.RestHttpService;
 
         private var service:RestHttpService;
 
-        function init():void
-        {
-//            service = new RestHttpService("localhost", 8080);
-//            service.addEventListener(RestHttpService.EVENT_DATA_RECEIVED, dataHandler);
-        }
-
-        function doGet():void
-        {
-//            service.doGet("/interviews");
-            rest.send();
-        }
-
-        function doDelete():void
-        {
-//            service.doDelete("/sessions/1234?id=123");
-            rest2.send();
-        }
-
         function doPost():void
         {
-            rest3.send("testing");
+            postService.send("<body>body of post request</body>");
+        }
+
+        function doPut():void
+        {
+            putService.send("<body>body of put request</body>");
         }
 
         function dataHandler(event:HttpEvent):void
         {
-            Alert.show(event.response.statusMessage);
-            Alert.show(event.data);
+            Alert.show(event.response.statusCode + " (" + event.response.statusMessage + ")\n\n" + event.data);
         }
 
         ]]></mx:Script>
 
-    <ss:RestHttpService id="rest" host="localhost" port="8080" method="{RestHttpService.METHOD_GET}" uri="/interviews" result="dataHandler(event)"/>
-    <ss:RestHttpService id="rest2" host="localhost" port="8080" method="{RestHttpService.METHOD_DELETE}" uri="/sessions/123?id=123" result="dataHandler(event)"/>
-    <ss:RestHttpService id="rest3" host="localhost" port="8080" method="{RestHttpService.METHOD_POST}" uri="/interviews/1/sessions?id=123" contentType="application/xml" result="dataHandler(event)"/>
+    <rest:RestHttpService id="getService" host="localhost" port="8080" method="{RestHttpService.METHOD_GET}" uri="/interviews" result="dataHandler(event)"/>
+    <rest:RestHttpService id="postService" host="localhost" port="8080" method="{RestHttpService.METHOD_POST}" uri="/interviews/1/sessions?id=123" contentType="application/xml" result="dataHandler(event)"/>
+    <rest:RestHttpService id="putService" host="localhost" port="8080" method="{RestHttpService.METHOD_PUT}" uri="/sessions/123?id=123" contentType="application/xml" result="dataHandler(event)"/>
+    <rest:RestHttpService id="deleteService" host="localhost" port="8080" method="{RestHttpService.METHOD_DELETE}" uri="/sessions/123?id=123" result="dataHandler(event)"/>
 
-    <mx:Button click="doGet()" label="Get"/>
-    <mx:Button click="doDelete()" label="Delete"/>
+    <mx:Button click="getService.send()" label="Get"/>
     <mx:Button click="doPost()" label="Post"/>
+    <mx:Button click="doPut()" label="Put"/>
+    <mx:Button click="deleteService.send()" label="Delete"/>
 </mx:Application>
