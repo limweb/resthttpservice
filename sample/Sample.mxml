@@ -31,8 +31,6 @@
         import com.sourcestream.flex.http.HttpEvent;
         import com.sourcestream.flex.http.RestHttpService;
 
-        private var service:RestHttpService;
-
         function doPost():void
         {
             postService.send("<body>body of post request</body>");
@@ -48,7 +46,8 @@
             Alert.show(event.response.statusCode + " (" + event.response.statusMessage + ")\n\n" + event.data);
         }
 
-        ]]></mx:Script>
+        ]]>
+    </mx:Script>
 
     <rest:RestHttpService id="getService" host="localhost" port="8080" method="{RestHttpService.METHOD_GET}" path="/interviews" result="dataHandler(event)"/>
     <rest:RestHttpService id="postService" host="localhost" port="8080" method="{RestHttpService.METHOD_POST}" path="/interviews/1/sessions?id=123" contentType="application/xml" result="dataHandler(event)"/>
