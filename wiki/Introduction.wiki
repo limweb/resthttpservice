@@ -14,8 +14,6 @@ To use the RestHttpService component, add it to your library path and invoke it 
         import com.sourcestream.flex.http.HttpEvent;
         import com.sourcestream.flex.http.RestHttpService;
 
-        private var service:RestHttpService;
-
         function doPost():void
         {
             postService.send("<body>body of post request</body>");
