@@ -3,7 +3,7 @@
 
 I plan to write detailed instructions soon but this will have to suffice for now.
 
-To use the RestHttpService component, add it to your library path and invoke it from an MXML application. Here is some sample MXML to help get you started:
+To use the RestHttpService component, add it to your library path and invoke it from an MXML application. Here is some sample MXML to help get you started (you can download this sample MXML from the Downloads tab):
 
 <pre>
 <?xml version="1.0" encoding="utf-8"?>
