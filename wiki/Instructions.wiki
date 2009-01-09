@@ -1,3 +1,46 @@
 = Usage Instructions =
 
-Coming soon.
+I plan to write detailed instructions soon but this will have to suffice for now.
+
+To use the RestHttpService component, add it to your library path and invoke it from an MXML application. Here is some sample MXML to help get you started:
+
+<pre>
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:rest="com.sourcestream.flex.http.*">
+
+    <mx:Script><![CDATA[
+        import mx.controls.Alert;
+        import com.sourcestream.flex.http.HttpEvent;
+        import com.sourcestream.flex.http.RestHttpService;
+
+        private var service:RestHttpService;
+
+        function doPost():void
+        {
+            postService.send("<body>body of post request</body>");
+        }
+
+        function doPut():void
+        {
+            putService.send("<body>body of put request</body>");
+        }
+
+        function dataHandler(event:HttpEvent):void
+        {
+            Alert.show(event.response.statusCode + " (" + event.response.statusMessage + ")\n\n" + event.data);
+        }
+
+        ]]>
+    </mx:Script>
+
+    <rest:RestHttpService id="getService" host="localhost" port="8080" method="{RestHttpService.METHOD_GET}" path="/interviews" result="dataHandler(event)"/>
+    <rest:RestHttpService id="postService" host="localhost" port="8080" method="{RestHttpService.METHOD_POST}" path="/interviews/1/sessions?id=123" contentType="application/xml" result="dataHandler(event)"/>
+    <rest:RestHttpService id="putService" host="localhost" port="8080" method="{RestHttpService.METHOD_PUT}" path="/sessions/123?id=123" contentType="application/xml" result="dataHandler(event)"/>
+    <rest:RestHttpService id="deleteService" host="localhost" port="8080" method="{RestHttpService.METHOD_DELETE}" path="/sessions/123?id=123" result="dataHandler(event)"/>
+
+    <mx:Button click="getService.send()" label="Get"/>
+    <mx:Button click="doPost()" label="Post"/>
+    <mx:Button click="doPut()" label="Put"/>
+    <mx:Button click="deleteService.send()" label="Delete"/>
+</mx:Application>
+</pre>
