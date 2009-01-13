@@ -3,6 +3,22 @@
 
 I plan to write detailed instructions soon but this will have to suffice for now.
 
+== Security Restrictions ==
+
+The Flash security model restricts a Flex application to making connections only to the server from which it was loaded. Therefore, you must either place your Flex application on the server that hosts the REST web service or you must include a special filed, named crossdomain.xml, in the root of your REST service. Here is a sample crossdomain.xml file that allows connections from a domain named "company.com".
+
+<pre>
+<?xml version="1.0"?>
+<!DOCTYPE cross-domain-policy SYSTEM "http://www.macromedia.com/xml/dtds/cross-domain-policy.dtd">
+<cross-domain-policy>
+<allow-access-from domain="*.company.com" />
+</cross-domain-policy>
+</pre>
+
+For detailed instructions about the format of the crossdomain.xml file, see this article:
+
+[http://kb.adobe.com/selfservice/viewContent.do?externalId=tn_14213&sliceId=2]
+
 == Sample Code ==
 
 To use the RestHttpService component, add it to your library path and invoke it from an MXML application. Here is some sample MXML to help get you started (you can download this sample MXML from the Downloads tab):
@@ -45,19 +61,3 @@ To use the RestHttpService component, add it to your library path and invoke it 
     <mx:Button click="deleteService.send()" label="Delete"/>
 </mx:Application>
 </pre>
-
-== Security Restrictions ==
-
-The Flash security model restricts a Flex application to making connections only to the server from which it was loaded. Therefore, you must either place your Flex application on the server that hosts the REST web service or you must include a special filed, named crossdomain.xml, in the root of your REST service. Here is a sample crossdomain.xml file that allows connections from a domain named "company.com".
-
-<pre>
-<?xml version="1.0"?>
-<!DOCTYPE cross-domain-policy SYSTEM "http://www.macromedia.com/xml/dtds/cross-domain-policy.dtd">
-<cross-domain-policy>
-<allow-access-from domain="*.company.com" />
-</cross-domain-policy>
-</pre>
-
-For detailed instructions about the format of the crossdomain.xml file, see this article:
-
-[http://kb.adobe.com/selfservice/viewContent.do?externalId=tn_14213&sliceId=2]
