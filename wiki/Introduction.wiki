@@ -54,7 +54,7 @@ The Flash security model restricts a Flex application to making connections only
 <?xml version="1.0"?>
 <!DOCTYPE cross-domain-policy SYSTEM "http://www.macromedia.com/xml/dtds/cross-domain-policy.dtd">
 <cross-domain-policy>
-    <allow-access-from domain="*.company.com" />
+<allow-access-from domain="*.company.com" />
 </cross-domain-policy>
 </pre>
 
