@@ -23,7 +23,7 @@ For detailed instructions about the format of the crossdomain.xml file, see this
 
 To use the RestHttpService component, add it to your library path and invoke it from an MXML application. Here is some sample MXML to help get you started (you can download this sample MXML from the Downloads tab):
 
-<pre>
+{{{
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:rest="com.sourcestream.flex.http.*">
 
@@ -60,4 +60,4 @@ To use the RestHttpService component, add it to your library path and invoke it 
     <mx:Button click="doPut()" label="Put"/>
     <mx:Button click="deleteService.send()" label="Delete"/>
 </mx:Application>
-</pre>
+}}}
