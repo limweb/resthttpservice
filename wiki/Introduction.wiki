@@ -60,7 +60,7 @@ To use the RestHttpService component, add it to your library path and invoke it 
 
             //use appropriate do<Action>() method to call the REST service (i.e., for GET requests, use doGet() method)
             restService.doPost("/books", "<body>body of post request</body>", "application/xml");
-            restService.doGet("/books");
+            restService.doGet("/books/1");
             restService.doPut("/books/1", "<body>body of put request</body>", "application/xml");
             restService.doDelete("/books/1");
         }
