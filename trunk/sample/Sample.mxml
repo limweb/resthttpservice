@@ -54,10 +54,10 @@
             //instantiate the RestHttpService class using the host name or IP address and port of the web service server
             var restService:RestHttpService = new RestHttpService("localhost", 8080);
 
-            //add a listener for when data is received
+            //add a listener to be invoked when data is received
             restService.addEventListener(RestHttpService.EVENT_DATA_RECEIVED, dataHandler);
 
-            //use the appropriate do<Action>() method to call the REST service (for GET requests, use doGet() method)
+            //use appropriate do<Action>() method to call the REST service (i.e., for GET requests, use doGet() method)
             restService.doGet("/books");
             restService.doPost("/books", "<body>body of post request</body>", "application/xml");
             restService.doPut("/books/1", "<body>body of put request</body>", "application/xml");
