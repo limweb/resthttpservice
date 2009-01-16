@@ -67,8 +67,8 @@
         ]]>
     </mx:Script>
 
-    <rest:RestHttpService id="getService" host="localhost" port="8080" method="{RestHttpService.METHOD_GET}" path="/books" result="dataHandler(event)"/>
     <rest:RestHttpService id="postService" host="localhost" port="8080" method="{RestHttpService.METHOD_POST}" path="/books" contentType="application/xml" result="dataHandler(event)"/>
+    <rest:RestHttpService id="getService" host="localhost" port="8080" method="{RestHttpService.METHOD_GET}" path="/books/1" result="dataHandler(event)"/>
     <rest:RestHttpService id="putService" host="localhost" port="8080" method="{RestHttpService.METHOD_PUT}" path="/books/1" contentType="application/xml" result="dataHandler(event)"/>
     <rest:RestHttpService id="deleteService" host="localhost" port="8080" method="{RestHttpService.METHOD_DELETE}" path="/books/1" result="dataHandler(event)"/>
 
