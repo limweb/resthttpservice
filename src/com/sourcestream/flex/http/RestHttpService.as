@@ -52,9 +52,9 @@ package com.sourcestream.flex.http
         private static const MONTHS:Array = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep",
                 "Oct", "Nov", "Dec");
 
-        private var socket:Socket;
+        private var _socket:Socket;
         private var _host:String;
-        private var _port:String;
+        private var _port:int;
         private var _method:String;
         private var _path:String;
         private var _body:String;
@@ -66,7 +66,7 @@ package com.sourcestream.flex.http
          * @param host Web service provider to which this class should connect
          * @param port Port on which to connect to the host
          */
-        public function RestHttpService(host:String=null, port:String=null)
+        public function RestHttpService(host:String=null, port:int=0)
         {
             createSocket();
             _host = host;
@@ -98,7 +98,7 @@ package com.sourcestream.flex.http
          *
          * @return Port on web service provider
          */
-        public function get port():String
+        public function get port():int
         {
             return _port;
         }
@@ -108,7 +108,7 @@ package com.sourcestream.flex.http
          *
          * @param port Port on web service provider
          */
-        public function set port(port:String):void
+        public function set port(port:int):void
         {
             _port = port;
         }
@@ -179,11 +179,11 @@ package com.sourcestream.flex.http
          */
         private function createSocket():void
         {
-            if (socket == null && _host != null && _port != null)
+            if (_socket == null && _host != null && _port != 0)
             {
-                socket = new Socket();
-                socket.addEventListener(Event.CONNECT, connectHandler);
-                socket.addEventListener(ProgressEvent.SOCKET_DATA, dataHandler);
+                _socket = new Socket();
+                _socket.addEventListener(Event.CONNECT, connectHandler);
+                _socket.addEventListener(ProgressEvent.SOCKET_DATA, dataHandler);
             }
         }
 
@@ -194,6 +194,7 @@ package com.sourcestream.flex.http
          */
         public function doGet(path:String):void
         {
+            _contentType = null;
             sendRequest(METHOD_GET, path);
         }
 
@@ -202,8 +203,9 @@ package com.sourcestream.flex.http
          *
          * @param path Path to resource on which to perform the POST
          */
-        public function doPost(path:String, body:String):void
+        public function doPost(path:String, body:String, contentType:String=null):void
         {
+            _contentType = contentType;
             sendRequest(METHOD_POST, path, body);
         }
 
@@ -212,8 +214,9 @@ package com.sourcestream.flex.http
          *
          * @param path Path to resource on which to perform the PUT
          */
-        public function doPut(path:String, body:String):void
+        public function doPut(path:String, body:String, contentType:String=null):void
         {
+            _contentType = contentType;
             sendRequest(METHOD_PUT, path, body);
         }
 
@@ -224,6 +227,7 @@ package com.sourcestream.flex.http
          */
         public function doDelete(path:String):void
         {
+            _contentType = null;
             sendRequest(METHOD_DELETE, path);
         }
 
@@ -234,6 +238,7 @@ package com.sourcestream.flex.http
          */
         public function doHead(path:String):void
         {
+            _contentType = null;
             sendRequest(METHOD_HEAD, path, _body);
         }
 
@@ -242,8 +247,9 @@ package com.sourcestream.flex.http
          *
          * @param path Path to resource on which to perform the OPTIONS
          */
-        public function doOptions(path:String, body:String=""):void
+        public function doOptions(path:String, body:String=null):void
         {
+            _contentType = null;
             sendRequest(METHOD_OPTIONS, path, body);
         }
 
@@ -256,7 +262,7 @@ package com.sourcestream.flex.http
         {
             _body = body;
             createSocket();
-            socket.connect(_host, parseInt(_port));
+            _socket.connect(_host, _port);
         }
 
         /**
@@ -266,10 +272,10 @@ package com.sourcestream.flex.http
          * @param path Path to resource
          * @param body Request body
          */
-        private function sendRequest(method:String, path:String, body:String=""):void
+        private function sendRequest(method:String, path:String, body:String=null):void
         {
             createSocket();
-            socket.connect(_host, parseInt(_port));
+            _socket.connect(_host, _port);
 
             _method = method;
             _path = path;
@@ -294,13 +300,19 @@ package com.sourcestream.flex.http
                 headers += "Content-Type: " + _contentType + "\n";
             }
 
-            if (_body != null)
+            if (_body == null)
+            {
+                _body = "";
+            }
+            else
             {
                 headers += "Content-Length: " + _body.length + "\n";
             }
 
-            socket.writeUTFBytes(requestLine + headers + "\n" + _body);
-            socket.flush();
+            _socket.writeUTFBytes(requestLine + headers + "\n" + _body);
+            _socket.flush();
+
+            _body = null;
         }
 
         /**
@@ -310,7 +322,7 @@ package com.sourcestream.flex.http
          */
         private function dataHandler(event:ProgressEvent):void
         {
-            var rawResponse:String = socket.readUTFBytes(event.bytesLoaded);
+            var rawResponse:String = _socket.readUTFBytes(event.bytesLoaded);
             var lines:Array = rawResponse.split("\n");
 
             var isFirstLine:Boolean = true;
