@@ -25,6 +25,31 @@ To use the RestHttpService component, add it to your library path and invoke it 
 
 {{{
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+ * The MIT License
+ *
+ * Copyright (c) 2008
+ * Dustin R. Callaway
+ * http://www.sourcestream.com/
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ -->
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:rest="com.sourcestream.flex.http.*">
 
     <mx:Script><![CDATA[
@@ -57,8 +82,8 @@ To use the RestHttpService component, add it to your library path and invoke it 
          */
         function actionScriptExample():void
         {
-            //instantiate RestHttpService using SSL (last parameter indicates whether or not connection is secure)
-            var restService:RestHttpService = new RestHttpService("localhost", 443, true);
+            //instantiate RestHttpService using host name or IP and port (change last parameter to true for SSL)
+            var restService:RestHttpService = new RestHttpService("localhost", 8080, false);
 
             //add a listener to be invoked when data is received
             restService.addEventListener(RestHttpService.EVENT_DATA_RECEIVED, dataHandler);
@@ -76,7 +101,7 @@ To use the RestHttpService component, add it to your library path and invoke it 
         ]]>
     </mx:Script>
 
-    //add secure="true" to connect to a secure service
+    <!-- add secure="true" to connect to a secure service -->
     <rest:RestHttpService id="postService" host="localhost" port="8080" method="{RestHttpService.METHOD_POST}" path="/books" contentType="application/xml" result="dataHandler(event)" fault="faultHandler(event)"/>
     <rest:RestHttpService id="getService" host="localhost" port="8080" method="{RestHttpService.METHOD_GET}" path="/books" result="dataHandler(event)" fault="faultHandler(event)"/>
     <rest:RestHttpService id="putService" host="localhost" port="8080" method="{RestHttpService.METHOD_PUT}" path="/books/1" contentType="application/xml" result="dataHandler(event)" fault="faultHandler(event)"/>
