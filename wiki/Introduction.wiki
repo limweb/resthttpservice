@@ -88,3 +88,7 @@ To use the RestHttpService component, add it to your library path and invoke it 
     <mx:Button click="deleteService.send()" label="Delete"/>
 </mx:Application>
 }}}
+
+== Limitations ==
+
+This service is under development and, therefore, does not yet support all HTTP features. For example, only text payloads are currently supported. Requests and responses carrying binary data will be supported in a future version.
