@@ -47,13 +47,18 @@ To use the RestHttpService component, add it to your library path and invoke it 
             Alert.show(event.response.statusCode + " (" + event.response.statusMessage + ")\n\n" + event.data);
         }
 
+        function faultHandler(event:HttpEvent):void
+        {
+            Alert.show(event.response.statusCode + " (" + event.response.statusMessage + ")\n\n" + event.text);
+        }
+
         /**
          * This method demonstrates how to invoke the RestHttpService class from ActionScript.
          */
         function actionScriptExample():void
         {
-            //instantiate the RestHttpService class using the host name or IP address and port of the web service server
-            var restService:RestHttpService = new RestHttpService("localhost", 8080);
+            //instantiate RestHttpService using SSL (last parameter indicates whether or not connection is secure)
+            var restService:RestHttpService = new RestHttpService("localhost", 443, true);
 
             //add a listener to be invoked when data is received
             restService.addEventListener(RestHttpService.EVENT_DATA_RECEIVED, dataHandler);
@@ -68,10 +73,11 @@ To use the RestHttpService component, add it to your library path and invoke it 
         ]]>
     </mx:Script>
 
-    <rest:RestHttpService id="postService" host="localhost" port="8080" path="/books" method="{RestHttpService.METHOD_POST}" contentType="application/xml" result="dataHandler(event)"/>
-    <rest:RestHttpService id="getService" host="localhost" port="8080" path="/books/1" method="{RestHttpService.METHOD_GET}" result="dataHandler(event)"/>
-    <rest:RestHttpService id="putService" host="localhost" port="8080" path="/books/1" method="{RestHttpService.METHOD_PUT}" contentType="application/xml" result="dataHandler(event)"/>
-    <rest:RestHttpService id="deleteService" host="localhost" port="8080" path="/books/1" method="{RestHttpService.METHOD_DELETE}" result="dataHandler(event)"/>
+    //add secure="true" to connect to a secure service
+    <rest:RestHttpService id="postService" host="localhost" port="8080" method="{RestHttpService.METHOD_POST}" path="/books" contentType="application/xml" result="dataHandler(event)" fault="faultHandler(event)"/>
+    <rest:RestHttpService id="getService" host="localhost" port="8080" method="{RestHttpService.METHOD_GET}" path="/books" result="dataHandler(event)" fault="faultHandler(event)"/>
+    <rest:RestHttpService id="putService" host="localhost" port="8080" method="{RestHttpService.METHOD_PUT}" path="/books/1" contentType="application/xml" result="dataHandler(event)" fault="faultHandler(event)"/>
+    <rest:RestHttpService id="deleteService" host="localhost" port="8080" method="{RestHttpService.METHOD_DELETE}" path="/books/1" result="dataHandler(event)" fault="faultHandler(event)"/>
 
     <mx:Button click="getService.send()" label="Get"/>
     <mx:Button click="doPost()" label="Post"/>
