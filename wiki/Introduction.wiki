@@ -62,6 +62,7 @@ To use the RestHttpService component, add it to your library path and invoke it 
 
             //add a listener to be invoked when data is received
             restService.addEventListener(RestHttpService.EVENT_DATA_RECEIVED, dataHandler);
+            restService.addEventListener(RestHttpService.EVENT_FAULT, faultHandler);
 
             //use appropriate do<Action>() method to call the REST service (i.e., for GET requests, use doGet() method)
             restService.doPost("/books", "<body>body of post request</body>", "application/xml");
