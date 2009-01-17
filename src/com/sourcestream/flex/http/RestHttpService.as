@@ -25,14 +25,20 @@
  */
 package com.sourcestream.flex.http
 {
+    import flash.events.IOErrorEvent;
+    import flash.events.SecurityErrorEvent;
     import mx.utils.StringUtil;
     import flash.events.EventDispatcher;
     import flash.events.ProgressEvent;
     import flash.events.Event;
     import flash.net.Socket;
+    import com.hurlant.crypto.tls.TLSSocket;
 
     // result event is fired when the web service's response is received
     [Event(name="result", type="com.sourcestream.flex.http.HttpEvent")]
+
+    // fault event is fired in response to a security or IO error
+    [Event(name="fault", type="com.sourcestream.flex.http.HttpEvent")]
 
     /**
      * Similar to Flex's HTTP service component but adds support for all HTTP methods.
@@ -40,6 +46,7 @@ package com.sourcestream.flex.http
     public class RestHttpService extends EventDispatcher
     {
         public static const EVENT_DATA_RECEIVED:String = "result";
+        public static const EVENT_FAULT:String = "fault";
 
         public static const METHOD_GET:String = "GET";
         public static const METHOD_POST:String = "POST";
@@ -53,12 +60,14 @@ package com.sourcestream.flex.http
                 "Oct", "Nov", "Dec");
 
         private var _socket:Socket;
+        private var _secureSocket:TLSSocket;
         private var _host:String;
         private var _port:int;
         private var _method:String;
         private var _path:String;
         private var _body:String;
         private var _contentType:String;
+        private var _secure:Boolean;
 
         /**
          * Constructs a new REST HTTP service object.
@@ -66,11 +75,12 @@ package com.sourcestream.flex.http
          * @param host Web service provider to which this class should connect
          * @param port Port on which to connect to the host
          */
-        public function RestHttpService(host:String=null, port:int=0)
+        public function RestHttpService(host:String=null, port:int=0, secure:Boolean=false)
         {
             createSocket();
             _host = host;
             _port = port;
+            _secure = secure;
         }
 
         /**
@@ -175,15 +185,51 @@ package com.sourcestream.flex.http
         }
 
         /**
+         * Indicates whether or not a secure SSL connection should be used.
+         *
+         * @return Secure connection indicator
+         */
+        public function get secure():Boolean
+        {
+            return _secure;
+        }
+
+        /**
+         * Sets whether or not a secure SSL connection should be used.
+         *
+         * @param secure Secure connection indicator
+         */
+        public function set secure(secure:Boolean):void
+        {
+            _secure = secure;
+        }
+
+        /**
          * Creates a socket and adds CONNECT and SOCKET_DATA event listeners.
          */
         private function createSocket():void
         {
-            if (_socket == null && _host != null && _port != 0)
+            if (_host != null && _port != 0)
             {
-                _socket = new Socket();
-                _socket.addEventListener(Event.CONNECT, connectHandler);
-                _socket.addEventListener(ProgressEvent.SOCKET_DATA, dataHandler);
+                if (_secure)
+                {
+                    if (_secureSocket == null)
+                    {
+                        _secureSocket = new TLSSocket();
+                        _secureSocket.addEventListener(Event.CONNECT, connectHandler);
+                        _secureSocket.addEventListener(ProgressEvent.SOCKET_DATA, dataHandler);
+                        _secureSocket.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+                        _secureSocket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
+                    }
+                }
+                else if (_socket == null)
+                {
+                    _socket = new Socket();
+                    _socket.addEventListener(Event.CONNECT, connectHandler);
+                    _socket.addEventListener(ProgressEvent.SOCKET_DATA, dataHandler);
+                    _socket.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+                    _socket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
+                }
             }
         }
 
@@ -262,7 +308,15 @@ package com.sourcestream.flex.http
         {
             _body = body;
             createSocket();
-            _socket.connect(_host, _port);
+
+            if (_secure)
+            {
+                _secureSocket.connect(_host, _port);
+            }
+            else
+            {
+                _socket.connect(_host, _port);
+            }
         }
 
         /**
@@ -275,7 +329,15 @@ package com.sourcestream.flex.http
         private function sendRequest(method:String, path:String, body:String=null):void
         {
             createSocket();
-            _socket.connect(_host, _port);
+
+            if (_secure)
+            {
+                _secureSocket.connect(_host, _port);
+            }
+            else
+            {
+                _socket.connect(_host, _port);
+            }
 
             _method = method;
             _path = path;
@@ -309,8 +371,16 @@ package com.sourcestream.flex.http
                 headers += "Content-Length: " + _body.length + "\n";
             }
 
-            _socket.writeUTFBytes(requestLine + headers + "\n" + _body);
-            _socket.flush();
+            if (_secure)
+            {
+                _secureSocket.writeUTFBytes(requestLine + headers + "\n" + _body);
+                _secureSocket.flush();
+            }
+            else
+            {
+                _socket.writeUTFBytes(requestLine + headers + "\n" + _body);
+                _socket.flush();
+            }
 
             _body = null;
         }
@@ -362,6 +432,34 @@ package com.sourcestream.flex.http
             var httpEvent:HttpEvent = new HttpEvent(EVENT_DATA_RECEIVED);
             httpEvent.data = rawResponse;
             httpEvent.response = new HttpResponse(statusCode, statusMessage, headers, body);
+            dispatchEvent(httpEvent);
+        }
+
+        /**
+         * Handles security errors.
+         *
+         * @param event Security error event
+         */
+        private function securityErrorHandler(event:SecurityErrorEvent):void
+        {
+            var httpEvent:HttpEvent = new HttpEvent(EVENT_FAULT);
+            httpEvent.text = event.text;
+            httpEvent.response = new HttpResponse(500, "Internal Server Error", null, null);
+
+            dispatchEvent(httpEvent);
+        }
+
+        /**
+         * Handles IO errors.
+         *
+         * @param event IO error event
+         */
+        private function ioErrorHandler(event:IOErrorEvent):void
+        {
+            var httpEvent:HttpEvent = new HttpEvent(EVENT_FAULT);
+            httpEvent.text = event.text;
+            httpEvent.response = new HttpResponse(500, "Internal Server Error", null, null);
+
             dispatchEvent(httpEvent);
         }
     }
