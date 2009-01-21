@@ -56,8 +56,8 @@
          */
         function actionScriptExample():void
         {
-            //instantiate RestHttpService using host name or IP and port (change last parameter to true for SSL)
-            var restService:RestHttpService = new RestHttpService("localhost", 8080, false);
+            //instantiate RestHttpService using host name or IP and port (add third paramater of true for SSL)
+            var restService:RestHttpService = new RestHttpService("localhost", 8080);
 
             //add a listener to be invoked when data is received
             restService.addEventListener(RestHttpService.EVENT_DATA_RECEIVED, dataHandler);
