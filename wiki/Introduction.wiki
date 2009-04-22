@@ -91,4 +91,4 @@ To use the RestHttpService component, add it to your library path and invoke it 
 
 == Limitations ==
 
-This service is under development and, therefore, does not yet support all HTTP features. For example, only text payloads are currently supported. Requests and responses carrying binary data will be supported in a future version.
+This service is under development and, therefore, does not yet support all HTTP features. For example, only text payloads are currently supported. Requests and responses carrying binary data will be supported in a future version. In addition, the HTTPS/TLS/SSL support is in the early stages of development and still experimental.
