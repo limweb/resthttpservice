@@ -400,7 +400,7 @@ package com.sourcestream.flex.http
             var statusCode:int;
             var statusMessage:String;
             var headers:Object = new Object();
-            var body:String;
+            var body:String = "";
 
             for each (var line:String in lines)
             {
