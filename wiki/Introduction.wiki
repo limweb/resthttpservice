@@ -29,7 +29,7 @@ For detailed information regarding the format of the crossdomain.xml file and ho
 
 [http://kb.adobe.com/selfservice/viewContent.do?externalId=tn_14213&sliceId=2]
 
-NOTE: Prior to Flash 9.0.124, the policy file could be served by an HTTP server. Unfortunately, this is no longer the case and a socket server is now required. Therefore, you can no longer grant access to Flex socket clients by just dropping a crossdomain.xml file in your web root. Since you can't use an HTTP server, a simple way to serve this file is to run a small daemon process on your REST server that does nothing more than listen for socket connections and serve the policy file from port 843. You can learn more about how to set up a policy file server here:
+NOTE: Prior to Flash 9.0.124, the policy file could be served by an HTTP server. Unfortunately, a socket server is now required. You can no longer grant access to Flex socket clients by just dropping a crossdomain.xml file in your web root. Since you can't use an HTTP server, a simple way to serve the policy file is to run a small daemon process on your REST server that does nothing more than listen for socket connections and serve the file from port 843. You can learn more about how to set up a policy file server here:
 
 [http://www.adobe.com/devnet/flashplayer/articles/socket_policy_files.html]
 
