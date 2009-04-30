@@ -37,7 +37,7 @@ A free script that implements a simple policy file server is available here:
 
 [http://download.macromedia.com/pub/developer/flashpolicyd_v0.6.zip]
 
-If you'd prefer to listen for policy file requests on a port other then the default 843 (perhaps a port above 1024 so you don't have to run as root on Unix), you're Flex application will need to make this call at startup:
+If you'd prefer to listen for policy file requests on a port other then the default 843 (perhaps a port above 1024 so you don't have to run the policy server as root on Unix), you're Flex application will need to make this call at startup:
 
 {{{
 Security.loadPolicyFile("xmlsocket://" + restServerName + ":" + socketPolicyPort);
