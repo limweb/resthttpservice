@@ -15,7 +15,7 @@ The RestHttpService library uses sockets to overcome the limitations of Flex's H
 </cross-domain-policy>
 }}}
 
-This file grants access to port 8080 to Flex clients originating from the company.com domain. For detailed information regarding the format of the crossdomain.xml file and how to use it, see this article:
+This file grants access to port 8080 to all Flex clients originating from the company.com domain. For detailed information regarding the format of the crossdomain.xml file and how to use it, see this article:
 
 [http://kb.adobe.com/selfservice/viewContent.do?externalId=tn_14213&sliceId=2]
 
