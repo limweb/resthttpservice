@@ -5,19 +5,27 @@ I plan to write detailed instructions soon but this will have to suffice for now
 
 == Security Restrictions ==
 
-The Flash security model restricts a Flex application to making connections only to the server from which it was loaded. Therefore, you must either place your Flex application on the server that hosts the REST web service or you must include a special filed, named crossdomain.xml, in the root of your REST service. Here is a sample crossdomain.xml file that allows connections from a domain named "company.com".
+The RestHttpService library uses sockets to overcome the limitations of Flex's HTTPService component. Unfortunately, the Flash security model restricts a Flex application from making socket connections to any server that does not explicitly permit such connections (excluding basic HTTP GET and POST requests). Therefore, in order to make a REST service available to a Flex socket client, the REST server must expose a "socket policy file" named crossdomain.xml on port 843. This policy file is accessed automatically by Flex before it attempts to open a socket. If the policy file is not available, Flex throws a "Security sandbox violation" error. Here is a sample crossdomain.xml file:
 
 {{{
 <?xml version="1.0"?>
 <!DOCTYPE cross-domain-policy SYSTEM "http://www.macromedia.com/xml/dtds/cross-domain-policy.dtd">
 <cross-domain-policy>
-    <allow-access-from domain="*.company.com" />
+    <allow-access-from domain="*.company.com" to-ports="8080" secure="false"/>
 </cross-domain-policy>
 }}}
 
 For detailed instructions about the format of the crossdomain.xml file, see this article:
 
 [http://kb.adobe.com/selfservice/viewContent.do?externalId=tn_14213&sliceId=2]
+
+Again, this policy file must be available on port 843. A simple way to serve this file is to run a small daemon process on your web server that does nothing more than serve the policy file from this port. You can learn more about how to establish a policy file server here:
+
+[http://www.adobe.com/devnet/flashplayer/articles/socket_policy_files.html]
+
+You can download a free daemon to serve the policy file from here:
+
+[http://download.macromedia.com/pub/developer/flashpolicyd_v0.6.zip]
 
 == Sample Code ==
 
