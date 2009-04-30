@@ -29,7 +29,7 @@ For detailed information regarding the format of the crossdomain.xml file and ho
 
 [http://kb.adobe.com/selfservice/viewContent.do?externalId=tn_14213&sliceId=2]
 
-Again, this policy file must be available on port 843. A simple way to serve this file is to run a small daemon process on your web server that does nothing more than serve the policy file from this port. You can learn more about how to establish a policy file server here:
+Again, this policy file must be available on port 843. A simple way to serve this file is to run a small daemon process on your web server that does nothing more than serve the policy file from this port. You can learn more about how to create a policy file server here:
 
 [http://www.adobe.com/devnet/flashplayer/articles/socket_policy_files.html]
 
