@@ -37,6 +37,12 @@ A free script that implements a simple policy file server is available here:
 
 [http://download.macromedia.com/pub/developer/flashpolicyd_v0.6.zip]
 
+If you'd prefer to listen for policy file requests on a port other then the default (843), you're Flex application will need to run code like this at startup:
+
+{{{
+Security.loadPolicyFile("xmlsocket://" + restServerName + ":" + socketPolicyPort);
+}}}
+
 == Sample Code ==
 
 To use the RestHttpService component, add it to your library path and invoke it from an MXML application. Here is some sample MXML to help get you started (you can download this sample MXML from the Downloads tab):
