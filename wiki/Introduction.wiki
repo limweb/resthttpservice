@@ -40,7 +40,7 @@ A free script that implements a simple policy file server is available here:
 If you'd prefer to listen for policy file requests on a port other then the default 843 (perhaps a port above 1024), you're Flex application will need to make this call at startup:
 
 {{{
-Security.loadPolicyFile("xmlsocket://" + restServerName + ":" + socketPolicyPort + "/" + policyFilename);
+Security.loadPolicyFile("xmlsocket://" + restServerName + ":" + socketPolicyPort);
 }}}
 
 == Sample Code ==
