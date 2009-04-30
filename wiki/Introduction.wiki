@@ -5,7 +5,7 @@ I plan to write detailed instructions soon but this will have to suffice for now
 
 == Security Restrictions ==
 
-The RestHttpService library uses sockets to overcome the limitations of Flex's HTTPService component. Unfortunately, the Flash security model restricts a Flex application from making socket connections to any server that does not explicitly permit such connections (excluding basic HTTP GET and POST requests). Therefore, in order to make a REST service available to a Flex socket client, the REST server must expose a socket policy file on port 843. This file should be named crossdomain.xml (unless the Security.loadPolicyFile() method is used to load a different file). The policy file is accessed automatically by Flex before it attempts to open a socket. If the policy file is not available or does not grant access to the Flex application's domain, Flex will throw a "Security sandbox violation" error. Here is a very basic example of a crossdomain.xml file that allows access to all domains and ports:
+The RestHttpService library uses sockets to overcome the limitations of Flex's HTTPService component. Unfortunately, the Flash security model restricts a Flex application from making socket connections to any server that does not explicitly permit such connections (excluding basic HTTP GET and POST requests). Therefore, in order to make a REST service available to a Flex socket client, the REST server must expose a socket policy file on port 843 named crossdomain.xml (unless the Security.loadPolicyFile() method is used to explicitly load a different file from another port). This policy file is accessed automatically by Flex before it attempts to open a socket. If the policy file is not available or does not grant access to the Flex application's domain, Flex will throw a "Security sandbox violation" error. Here is a very basic example of a crossdomain.xml file that allows access to all domains and ports:
 
 {{{
 <?xml version="1.0"?>
@@ -29,7 +29,7 @@ For detailed information regarding the format of the crossdomain.xml file and ho
 
 [http://kb.adobe.com/selfservice/viewContent.do?externalId=tn_14213&sliceId=2]
 
-NOTE: Not only must this policy file be available on port 843, it must also be served by a socket server as opposed to an HTTP server. Therefore, you can't just drop the crossdomain.xml file in your web root and configure your web server to listen on port 843. Since you can't use an HTTP server, a simple way to serve this file is to run a small daemon process on your REST server that does nothing more than serve the policy file from port 843. You can learn more about how to set up a policy file server here:
+NOTE: Prior to Flash , the policy file could be served by an HTTP server. This is no longer the case and a socket server is now required. Therefore, you can't just drop the crossdomain.xml file in your web root and configure your web server to listen on port 843. Since you can't use an HTTP server, a simple way to serve this file is to run a small daemon process on your REST server that does nothing more than serve the policy file from port 843. You can learn more about how to set up a policy file server here:
 
 [http://www.adobe.com/devnet/flashplayer/articles/socket_policy_files.html]
 
