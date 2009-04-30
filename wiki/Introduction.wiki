@@ -15,7 +15,7 @@ The RestHttpService library uses sockets to overcome the limitations of Flex's H
 </cross-domain-policy>
 }}}
 
-This policy file grants access to port 8080 to all Flex clients originating from the company.com domain:
+This policy file grants access on port 8080 to all Flex clients originating from the company.com domain:
 
 {{{
 <?xml version="1.0"?>
