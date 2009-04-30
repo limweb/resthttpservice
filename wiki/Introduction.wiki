@@ -33,7 +33,7 @@ Again, this policy file must be available on port 843. A simple way to serve thi
 
 [http://www.adobe.com/devnet/flashplayer/articles/socket_policy_files.html]
 
-You can download a free daemon to serve the policy file from here:
+A free script that implements a simple policy file server is available here:
 
 [http://download.macromedia.com/pub/developer/flashpolicyd_v0.6.zip]
 
