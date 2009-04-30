@@ -5,7 +5,7 @@ I plan to write detailed instructions soon but this will have to suffice for now
 
 == Security Restrictions ==
 
-The RestHttpService library uses sockets to overcome the limitations of Flex's HTTPService component. Unfortunately, the Flash security model restricts a Flex application from making socket connections to any server that does not explicitly permit such connections (excluding basic HTTP GET and POST requests). Therefore, in order to make a REST service available to a Flex socket client, the REST server must expose a socket policy file named crossdomain.xml on port 843. This policy file is accessed automatically by Flex before it attempts to open a socket. If the policy file is not available, Flex throws a "Security sandbox violation" error. Here is a sample crossdomain.xml file:
+The RestHttpService library uses sockets to overcome the limitations of Flex's HTTPService component. Unfortunately, the Flash security model restricts a Flex application from making socket connections to any server that does not explicitly permit such connections (excluding basic HTTP GET and POST requests). Therefore, in order to make a REST service available to a Flex socket client, the REST server must expose a socket policy file on port 843. This file should be named crossdomain.xml (unless the Security.loadPolicyFile() method is used to load a different file). The policy file is accessed automatically by Flex before it attempts to open a socket. If the policy file is not available or does not grant access to the Flex application's domain, Flex will throw a "Security sandbox violation" error. Here is a sample crossdomain.xml file:
 
 {{{
 <?xml version="1.0"?>
@@ -15,7 +15,7 @@ The RestHttpService library uses sockets to overcome the limitations of Flex's H
 </cross-domain-policy>
 }}}
 
-For detailed instructions about the format of the crossdomain.xml file, see this article:
+This file grants access to port 8080 to Flex clients originating from the company.com domain. For detailed information regarding the format of the crossdomain.xml file and how to use it, see this article:
 
 [http://kb.adobe.com/selfservice/viewContent.do?externalId=tn_14213&sliceId=2]
 
