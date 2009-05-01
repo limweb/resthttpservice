@@ -49,12 +49,19 @@ To use the RestHttpService component, add it to your library path and invoke it 
 
 {{{
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:rest="com.sourcestream.flex.http.*">
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:rest="com.sourcestream.flex.http.*" applicationComplete="init()">
 
     <mx:Script><![CDATA[
         import mx.controls.Alert;
         import com.sourcestream.flex.http.HttpEvent;
         import com.sourcestream.flex.http.RestHttpService;
+
+        function init():void
+        {
+            //this line is only necessary if the REST server is listening for policy file requests
+            //on a port other than the default 843 (in this case, port 1025)
+            Security.loadPolicyFile("xmlsocket://localhost:1025");
+        }
 
         function doPost():void
         {
