@@ -68,6 +68,7 @@ package com.sourcestream.flex.http
         private var _body:String;
         private var _contentType:String;
         private var _secure:Boolean;
+        private var _rawResponse:String;
 
         /**
          * Constructs a new REST HTTP service object.
@@ -217,6 +218,7 @@ package com.sourcestream.flex.http
                     {
                         _secureSocket = new TLSSocket();
                         _secureSocket.addEventListener(Event.CONNECT, connectHandler);
+                        _secureSocket.addEventListener(Event.CLOSE, closeHandler);
                         _secureSocket.addEventListener(ProgressEvent.SOCKET_DATA, dataHandler);
                         _secureSocket.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
                         _secureSocket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
@@ -226,6 +228,7 @@ package com.sourcestream.flex.http
                 {
                     _socket = new Socket();
                     _socket.addEventListener(Event.CONNECT, connectHandler);
+                    _socket.addEventListener(Event.CLOSE, closeHandler);
                     _socket.addEventListener(ProgressEvent.SOCKET_DATA, dataHandler);
                     _socket.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
                     _socket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
@@ -351,6 +354,8 @@ package com.sourcestream.flex.http
          */
         private function connectHandler(event:Event):void
         {
+            _rawResponse = ""; //clear response buffer for each new socket connection
+
             var requestLine:String = _method + " " + _path + " HTTP/1.0\n";
 
             var now:Date = new Date();
@@ -386,14 +391,26 @@ package com.sourcestream.flex.http
         }
 
         /**
-         * Handler for the socket's SOCKET_DATA event.
+         * Handler for the socket's SOCKET_DATA event. Reads data from the socket into an instance variable.
          *
          * @param event SOCKET_DATA event
          */
         private function dataHandler(event:ProgressEvent):void
         {
-            var rawResponse:String = _socket.readUTFBytes(event.bytesLoaded);
-            var lines:Array = rawResponse.split("\n");
+            while (_socket.bytesAvailable)
+            {
+                _rawResponse += _socket.readUTFBytes(_socket.bytesAvailable);
+            }
+        }
+
+        /**
+         * Handler for the socket's CLOSE event. Reads the instance variable populated by the dataHandler() method.
+         *
+         * @param event SOCKET_DATA event
+         */
+        private function closeHandler(event:Event):void
+        {
+            var lines:Array = _rawResponse.split("\n");
 
             var isFirstLine:Boolean = true;
             var isBody:Boolean = false;
@@ -430,7 +447,7 @@ package com.sourcestream.flex.http
             }
 
             var httpEvent:HttpEvent = new HttpEvent(EVENT_DATA_RECEIVED);
-            httpEvent.data = rawResponse;
+            httpEvent.data = _rawResponse;
             httpEvent.response = new HttpResponse(statusCode, statusMessage, headers, body);
             dispatchEvent(httpEvent);
         }
