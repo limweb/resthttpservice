@@ -1,0 +1,16 @@
+<flex-config xmlns="http://www.adobe.com/2006/flex-config">
+    <compiler>
+        <source-path>
+            <path-element>src</path-element>
+        </source-path>
+        <library-path append="true">
+            <path-element>lib/as3crypto.swc</path-element>
+        </library-path>
+    </compiler>
+    <output>/Users/dcallaway/Development/RestHttpService/out/production/RestHttpService/RestHttpService.swc</output>
+    <include-classes>
+        <class>com.sourcestream.flex.http.HttpEvent</class>
+        <class>com.sourcestream.flex.http.HttpResponse</class>
+        <class>com.sourcestream.flex.http.RestHttpService</class>
+    </include-classes>
+</flex-config>
