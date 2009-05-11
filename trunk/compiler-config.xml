@@ -7,7 +7,7 @@
             <path-element>lib/as3crypto.swc</path-element>
         </library-path>
     </compiler>
-    <output>/Users/dcallaway/Development/RestHttpService/out/production/RestHttpService/RestHttpService.swc</output>
+    <output>RestHttpService.swc</output>
     <include-classes>
         <class>com.sourcestream.flex.http.HttpEvent</class>
         <class>com.sourcestream.flex.http.HttpResponse</class>
