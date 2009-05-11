@@ -406,7 +406,7 @@ package com.sourcestream.flex.http
         /**
          * Handler for the socket's CLOSE event. Reads the instance variable populated by the dataHandler() method.
          *
-         * @param event SOCKET_DATA event
+         * @param event CLOSE event
          */
         private function closeHandler(event:Event):void
         {
