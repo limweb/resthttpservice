@@ -45,7 +45,7 @@ package com.sourcestream.flex.http
      */
     public class RestHttpService extends EventDispatcher
     {
-        public static const EVENT_DATA_RECEIVED:String = "result";
+        public static const EVENT_RESULT:String = "result";
         public static const EVENT_FAULT:String = "fault";
 
         public static const METHOD_GET:String = "GET";
@@ -61,10 +61,10 @@ package com.sourcestream.flex.http
 
         private var _socket:Socket;
         private var _secureSocket:TLSSocket;
-        private var _host:String;
+        private var _server:String;
         private var _port:int;
         private var _method:String;
-        private var _path:String;
+        private var _resource:String;
         private var _body:String;
         private var _contentType:String;
         private var _secure:Boolean;
@@ -73,13 +73,13 @@ package com.sourcestream.flex.http
         /**
          * Constructs a new REST HTTP service object.
          *
-         * @param host Web service provider to which this class should connect
-         * @param port Port on which to connect to the host
+         * @param server Web service provider to which this class should connect
+         * @param port Port on which to connect to the server
          */
-        public function RestHttpService(host:String=null, port:int=0, secure:Boolean=false)
+        public function RestHttpService(server:String=null, port:int=0, secure:Boolean=false)
         {
             createSocket();
-            _host = host;
+            _server = server;
             _port = port;
             _secure = secure;
         }
@@ -89,19 +89,19 @@ package com.sourcestream.flex.http
          *
          * @return Web service provider
          */
-        public function get host():String
+        public function get server():String
         {
-            return _host;
+            return _server;
         }
 
         /**
          * Sets the address of the web service provider.
          *
-         * @param host Web service provider
+         * @param server Web service provider
          */
-        public function set host(host:String):void
+        public function set server(server:String):void
         {
-            _host = host;
+            _server = server;
         }
 
         /**
@@ -146,23 +146,23 @@ package com.sourcestream.flex.http
         }
 
         /**
-         * Gets the path to the resource (minus the host and port information).
+         * Gets the path to the resource (minus the server and port information).
          *
          * @return Path to resource
          */
-        public function get path():String
+        public function get resource():String
         {
-            return _path;
+            return _resource;
         }
 
         /**
-         * Sets the path to the resource (minus the host and port information).
+         * Sets the path to the resource (minus the server and port information).
          *
-         * @param path Path to resource
+         * @param resource Path to resource
          */
-        public function set path(path:String):void
+        public function set resource(resource:String):void
         {
-            _path = path;
+            _resource = resource;
         }
 
         /**
@@ -210,7 +210,7 @@ package com.sourcestream.flex.http
          */
         private function createSocket():void
         {
-            if (_host != null && _port != 0)
+            if (_server != null && _port != 0)
             {
                 if (_secure)
                 {
@@ -314,11 +314,11 @@ package com.sourcestream.flex.http
 
             if (_secure)
             {
-                _secureSocket.connect(_host, _port);
+                _secureSocket.connect(_server, _port);
             }
             else
             {
-                _socket.connect(_host, _port);
+                _socket.connect(_server, _port);
             }
         }
 
@@ -335,15 +335,15 @@ package com.sourcestream.flex.http
 
             if (_secure)
             {
-                _secureSocket.connect(_host, _port);
+                _secureSocket.connect(_server, _port);
             }
             else
             {
-                _socket.connect(_host, _port);
+                _socket.connect(_server, _port);
             }
 
             _method = method;
-            _path = path;
+            _resource = path;
             _body = body;
         }
 
@@ -356,7 +356,7 @@ package com.sourcestream.flex.http
         {
             _rawResponse = ""; //clear response buffer for each new socket connection
 
-            var requestLine:String = _method + " " + _path + " HTTP/1.0\n";
+            var requestLine:String = _method + " " + _resource + " HTTP/1.0\n";
 
             var now:Date = new Date();
             var headers:String = "Date: " + DAYS[now.day] + ", " + now.date + " " + MONTHS[now.month] + " " +
@@ -376,14 +376,16 @@ package com.sourcestream.flex.http
                 headers += "Content-Length: " + _body.length + "\n";
             }
 
+            var request:String = requestLine + headers + "\n" + _body;
+
             if (_secure)
             {
-                _secureSocket.writeUTFBytes(requestLine + headers + "\n" + _body);
+                _secureSocket.writeUTFBytes(request);
                 _secureSocket.flush();
             }
             else
             {
-                _socket.writeUTFBytes(requestLine + headers + "\n" + _body);
+                _socket.writeUTFBytes(request);
                 _socket.flush();
             }
 
@@ -446,7 +448,7 @@ package com.sourcestream.flex.http
                 }
             }
 
-            var httpEvent:HttpEvent = new HttpEvent(EVENT_DATA_RECEIVED);
+            var httpEvent:HttpEvent = new HttpEvent(EVENT_RESULT, _method, _resource);
             httpEvent.data = _rawResponse;
             httpEvent.response = new HttpResponse(statusCode, statusMessage, headers, body);
             dispatchEvent(httpEvent);
@@ -459,7 +461,7 @@ package com.sourcestream.flex.http
          */
         private function securityErrorHandler(event:SecurityErrorEvent):void
         {
-            var httpEvent:HttpEvent = new HttpEvent(EVENT_FAULT);
+            var httpEvent:HttpEvent = new HttpEvent(EVENT_FAULT, _method, _resource);
             httpEvent.text = event.text;
             httpEvent.response = new HttpResponse(500, "Internal Server Error", null, null);
 
@@ -473,7 +475,7 @@ package com.sourcestream.flex.http
          */
         private function ioErrorHandler(event:IOErrorEvent):void
         {
-            var httpEvent:HttpEvent = new HttpEvent(EVENT_FAULT);
+            var httpEvent:HttpEvent = new HttpEvent(EVENT_FAULT, _method, _resource);
             httpEvent.text = event.text;
             httpEvent.response = new HttpResponse(500, "Internal Server Error", null, null);
 
