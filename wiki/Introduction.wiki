@@ -1,7 +1,7 @@
 #labels Phase-Implementation
 = Usage Instructions =
 
-I plan to write detailed instructions soon but this will have to suffice for now.
+I plan to write detailed instructions eventually but this will have to suffice for now.
 
 == Security Restrictions ==
 
