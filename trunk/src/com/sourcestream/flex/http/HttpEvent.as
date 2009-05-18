@@ -55,6 +55,16 @@ package com.sourcestream.flex.http
         }
 
         /**
+         * Sets the HTTP response for this event.
+         *
+         * @param response HttpResponse
+         */
+        public function set response(response:HttpResponse):void
+        {
+            _response = response;
+        }
+
+        /**
          * Gets the HTTP method used in the request.
          *
          * @return HTTP method
