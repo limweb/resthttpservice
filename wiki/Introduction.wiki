@@ -48,21 +48,13 @@ Security.loadPolicyFile("xmlsocket://" + restServerName + ":" + socketPolicyPort
 To use the RestHttpService component, add it to your library path and invoke it from an MXML application. Here is some sample MXML to help get you started (you can download this sample MXML from the Downloads tab):
 
 {{{
-<?xml version="1.0" encoding="utf-8"?>
-<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:rest="com.sourcestream.flex.http.*" applicationComplete="init()">
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:rest="com.sourcestream.flex.http.*">
 
     <mx:Script><![CDATA[
         import mx.controls.Alert;
+
         import com.sourcestream.flex.http.HttpEvent;
         import com.sourcestream.flex.http.RestHttpService;
-
-        const REST_SERVER:String = "localhost";
-
-        function init():void
-        {
-            //this line is only necessary if the REST server is listening for policy file requests on a port other than the default 843 (in this case, port 1025)
-            Security.loadPolicyFile("xmlsocket://" + REST_SERVER + ":1025");
-        }
 
         function doPost():void
         {
@@ -93,7 +85,7 @@ To use the RestHttpService component, add it to your library path and invoke it 
             var restService:RestHttpService = new RestHttpService("localhost", 8080);
 
             //add a listener to be invoked when data is received
-            restService.addEventListener(RestHttpService.EVENT_DATA_RECEIVED, dataHandler);
+            restService.addEventListener(RestHttpService.EVENT_RESULT, dataHandler);
 
             //add a listener to be invoked when an error occurs
             restService.addEventListener(RestHttpService.EVENT_FAULT, faultHandler);
@@ -109,10 +101,10 @@ To use the RestHttpService component, add it to your library path and invoke it 
     </mx:Script>
 
     <!-- add secure="true" to connect to a secure service -->
-    <rest:RestHttpService id="postService" host="{REST_SERVER}" port="8080" method="{RestHttpService.METHOD_POST}" path="/books" contentType="application/xml" result="dataHandler(event)" fault="faultHandler(event)"/>
-    <rest:RestHttpService id="getService" host="{REST_SERVER}" port="8080" method="{RestHttpService.METHOD_GET}" path="/books" result="dataHandler(event)" fault="faultHandler(event)"/>
-    <rest:RestHttpService id="putService" host="{REST_SERVER}" port="8080" method="{RestHttpService.METHOD_PUT}" path="/books/1" contentType="application/xml" result="dataHandler(event)" fault="faultHandler(event)"/>
-    <rest:RestHttpService id="deleteService" host="{REST_SERVER}" port="8080" method="{RestHttpService.METHOD_DELETE}" path="/books/1" result="dataHandler(event)" fault="faultHandler(event)"/>
+    <rest:RestHttpService id="postService" server="localhost" port="8080" method="{RestHttpService.METHOD_POST}" resource="/books" contentType="application/xml" result="dataHandler(event)" fault="faultHandler(event)"/>
+    <rest:RestHttpService id="getService" server="localhost" port="8080" method="{RestHttpService.METHOD_GET}" resource="/books" result="dataHandler(event)" fault="faultHandler(event)"/>
+    <rest:RestHttpService id="putService" server="localhost" port="8080" method="{RestHttpService.METHOD_PUT}" resource="/books/1" contentType="application/xml" result="dataHandler(event)" fault="faultHandler(event)"/>
+    <rest:RestHttpService id="deleteService" server="localhost" port="8080" method="{RestHttpService.METHOD_DELETE}" resource="/books/1" result="dataHandler(event)" fault="faultHandler(event)"/>
 
     <mx:Button click="getService.send()" label="Get"/>
     <mx:Button click="doPost()" label="Post"/>
