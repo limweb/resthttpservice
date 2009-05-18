@@ -43,6 +43,12 @@ If you'd prefer to listen for policy file requests on a port other than the defa
 Security.loadPolicyFile("xmlsocket://" + restServerName + ":" + socketPolicyPort);
 }}}
 
+UPDATE: If you'd like the RestHttpService to load the socket policy file automatically, you can just set the policyFilePort property like this:
+
+{{{
+    <rest:RestHttpService id="postService" server="localhost" port="8080" policyFilePort="1025" method="{RestHttpService.METHOD_POST}" resource="/books" contentType="application/xml" result="dataHandler(event)" fault="faultHandler(event)"/>
+}}}
+
 == Sample Code ==
 
 To use the RestHttpService component, add it to your library path and invoke it from an MXML application. Here is some sample MXML to help get you started (you can download this sample MXML from the Downloads tab):
