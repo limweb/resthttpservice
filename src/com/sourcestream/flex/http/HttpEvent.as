@@ -32,11 +32,46 @@ package com.sourcestream.flex.http
      */
     public class HttpEvent extends DataEvent
     {
-        public var response:HttpResponse;
+        public var _response:HttpResponse;
+        public var _method:String;
+        public var _resource:String;
 
-        public function HttpEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
+        public function HttpEvent(type:String, method:String, resource:String, bubbles:Boolean=false,
+            cancelable:Boolean=false)
         {
             super(type, bubbles, cancelable);
+            _method = method;
+            _resource = resource;
+        }
+
+        /**
+         * Gets the HTTP response for this event.
+         *
+         * @return HttpResponse
+         */
+        public function get response():HttpResponse
+        {
+            return _response;
+        }
+
+        /**
+         * Gets the HTTP method used in the request.
+         *
+         * @return HTTP method
+         */
+        public function get method():String
+        {
+            return _method;
+        }
+
+        /**
+         * Gets the HTTP resource being requested.
+         *
+         * @return HTTP resource
+         */
+        public function get resource():String
+        {
+            return _resource;
         }
     }
 }
