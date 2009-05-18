@@ -27,7 +27,8 @@ package com.sourcestream.flex.http
 {
     import flash.events.IOErrorEvent;
     import flash.events.SecurityErrorEvent;
-    import mx.utils.StringUtil;
+import flash.system.Security;
+import mx.utils.StringUtil;
     import flash.events.EventDispatcher;
     import flash.events.ProgressEvent;
     import flash.events.Event;
@@ -63,6 +64,7 @@ package com.sourcestream.flex.http
         private var _secureSocket:TLSSocket;
         private var _server:String;
         private var _port:int;
+        private var _policyFilePort:int;
         private var _method:String;
         private var _resource:String;
         private var _body:String;
@@ -75,13 +77,30 @@ package com.sourcestream.flex.http
          *
          * @param server Web service provider to which this class should connect
          * @param port Port on which to connect to the server
+         * @param secure Indicates whether or not service calls must be encrypted
          */
-        public function RestHttpService(server:String=null, port:int=0, secure:Boolean=false)
+        public function RestHttpService(server:String=null, port:int=0, secure:Boolean=false, policyFilePort:int=0)
         {
-            createSocket();
             _server = server;
             _port = port;
             _secure = secure;
+            _policyFilePort = policyFilePort;
+        }
+
+        /**
+         * Before establishing socket connections from a flash application, a socket policy file must be loaded from the
+         * target server (i.e., the server hosting the REST service). If the client has not already loaded such a
+         * policy file, this can be accomplished by calling this convenience method. This call is not necessary if the
+         * socket policy file is being served from port 843 (the well-known port for Flash policy files).
+         *
+         * @see http://www.adobe.com/devnet/flashplayer/articles/socket_policy_files.html
+         *
+         * @param server Server hosting the REST service
+         * @param policyFilePort Port on which the server is listening for policy file requests
+         */
+        public static function loadPolicyFile(server:String, policyFilePort:int):void
+        {
+            Security.loadPolicyFile("xmlsocket://" + server + ":" + policyFilePort);
         }
 
         /**
@@ -122,6 +141,26 @@ package com.sourcestream.flex.http
         public function set port(port:int):void
         {
             _port = port;
+        }
+
+        /**
+         * Gets the port on which the server is listening for policy file requests.
+         *
+         * @return Port on which the server is listening for policy file requests
+         */
+        public function get policyFilePort():int
+        {
+            return _policyFilePort;
+        }
+
+        /**
+         * Sets the port on which the server is listening for policy file requests.
+         *
+         * @param policyFilePort Port on which the server is listening for policy file requests
+         */
+        public function set policyFilePort(policyFilePort:int):void
+        {
+            _policyFilePort = policyFilePort;
         }
 
         /**
@@ -232,6 +271,11 @@ package com.sourcestream.flex.http
                     _socket.addEventListener(ProgressEvent.SOCKET_DATA, dataHandler);
                     _socket.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
                     _socket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
+                }
+
+                if (_policyFilePort > 0)
+                {
+                    loadPolicyFile(_server, _policyFilePort);
                 }
             }
         }
