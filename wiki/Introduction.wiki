@@ -100,7 +100,6 @@ To use the RestHttpService component, add it to your library path and invoke it 
         ]]>
     </mx:Script>
 
-    <!-- add secure="true" to connect to a secure service -->
     <rest:RestHttpService id="postService" server="localhost" port="8080" method="{RestHttpService.METHOD_POST}" resource="/books" contentType="application/xml" result="dataHandler(event)" fault="faultHandler(event)"/>
     <rest:RestHttpService id="getService" server="localhost" port="8080" method="{RestHttpService.METHOD_GET}" resource="/books" result="dataHandler(event)" fault="faultHandler(event)"/>
     <rest:RestHttpService id="putService" server="localhost" port="8080" method="{RestHttpService.METHOD_PUT}" resource="/books/1" contentType="application/xml" result="dataHandler(event)" fault="faultHandler(event)"/>
