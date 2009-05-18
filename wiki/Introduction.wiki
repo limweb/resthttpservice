@@ -46,7 +46,7 @@ Security.loadPolicyFile("xmlsocket://" + restServerName + ":" + socketPolicyPort
 UPDATE: If you'd like the RestHttpService to load the socket policy file automatically, you can now set the policyFilePort property like this:
 
 {{{
-    <rest:RestHttpService id="postService" server="localhost" port="8080" policyFilePort="1025" method="{RestHttpService.METHOD_POST}" resource="/books" contentType="application/xml" result="dataHandler(event)" fault="faultHandler(event)"/>
+<rest:RestHttpService id="postService" server="localhost" port="8080" policyFilePort="1025" method="{RestHttpService.METHOD_POST}" resource="/books" contentType="application/xml" result="dataHandler(event)" fault="faultHandler(event)"/>
 }}}
 
 == Sample Code ==
