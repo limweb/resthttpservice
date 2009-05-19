@@ -285,65 +285,65 @@ import mx.utils.StringUtil;
          *
          * @param path Path to resource on which to perform the GET
          */
-        public function doGet(path:String):void
+        public function doGet(resource:String):void
         {
             _contentType = null;
-            sendRequest(METHOD_GET, path);
+            sendRequest(METHOD_GET, resource);
         }
 
         /**
          * Performs a POST operation.
          *
-         * @param path Path to resource on which to perform the POST
+         * @param resource Path to resource on which to perform the POST
          */
-        public function doPost(path:String, body:String, contentType:String=null):void
+        public function doPost(resource:String, body:String, contentType:String=null):void
         {
             _contentType = contentType;
-            sendRequest(METHOD_POST, path, body);
+            sendRequest(METHOD_POST, resource, body);
         }
 
         /**
          * Performs a PUT operation.
          *
-         * @param path Path to resource on which to perform the PUT
+         * @param resource Path to resource on which to perform the PUT
          */
-        public function doPut(path:String, body:String, contentType:String=null):void
+        public function doPut(resource:String, body:String, contentType:String=null):void
         {
             _contentType = contentType;
-            sendRequest(METHOD_PUT, path, body);
+            sendRequest(METHOD_PUT, resource, body);
         }
 
         /**
          * Performs a DELETE operation.
          *
-         * @param path Path to resource on which to perform the DELETE
+         * @param resource Path to resource on which to perform the DELETE
          */
-        public function doDelete(path:String):void
+        public function doDelete(resource:String):void
         {
             _contentType = null;
-            sendRequest(METHOD_DELETE, path);
+            sendRequest(METHOD_DELETE, resource);
         }
 
         /**
          * Performs a HEAD operation.
          *
-         * @param path Path to resource on which to perform the HEAD
+         * @param resource Path to resource on which to perform the HEAD
          */
-        public function doHead(path:String):void
+        public function doHead(resource:String):void
         {
             _contentType = null;
-            sendRequest(METHOD_HEAD, path, _body);
+            sendRequest(METHOD_HEAD, resource, _body);
         }
 
         /**
          * Performs a OPTIONS operation.
          *
-         * @param path Path to resource on which to perform the OPTIONS
+         * @param resource Path to resource on which to perform the OPTIONS
          */
-        public function doOptions(path:String, body:String=null):void
+        public function doOptions(resource:String, body:String=null):void
         {
             _contentType = null;
-            sendRequest(METHOD_OPTIONS, path, body);
+            sendRequest(METHOD_OPTIONS, resource, body);
         }
 
         /**
@@ -370,10 +370,10 @@ import mx.utils.StringUtil;
          * Called internally to initiate sending a request.
          *
          * @param method HTTP method
-         * @param path Path to resource
+         * @param resource Path to resource
          * @param body Request body
          */
-        private function sendRequest(method:String, path:String, body:String=null):void
+        private function sendRequest(method:String, resource:String, body:String=null):void
         {
             createSocket();
 
@@ -387,7 +387,7 @@ import mx.utils.StringUtil;
             }
 
             _method = method;
-            _resource = path;
+            _resource = resource;
             _body = body;
         }
 
