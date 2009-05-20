@@ -71,6 +71,7 @@ import mx.utils.StringUtil;
         private var _contentType:String;
         private var _secure:Boolean;
         private var _rawResponse:String;
+        private var _policyFileLoaded:Boolean;
 
         /**
          * Constructs a new REST HTTP service object.
@@ -251,6 +252,12 @@ import mx.utils.StringUtil;
         {
             if (_server != null && _port != 0)
             {
+                if (_policyFilePort > 0 && !_policyFileLoaded)
+                {
+                    loadPolicyFile(_server, _policyFilePort);
+                    _policyFileLoaded = true;
+                }
+
                 if (_secure)
                 {
                     if (_secureSocket == null)
@@ -271,11 +278,6 @@ import mx.utils.StringUtil;
                     _socket.addEventListener(ProgressEvent.SOCKET_DATA, dataHandler);
                     _socket.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
                     _socket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
-                }
-
-                if (_policyFilePort > 0)
-                {
-                    loadPolicyFile(_server, _policyFilePort);
                 }
             }
         }
