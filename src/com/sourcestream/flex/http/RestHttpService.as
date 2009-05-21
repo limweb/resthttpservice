@@ -35,6 +35,7 @@ import flash.events.SecurityErrorEvent;
 import flash.net.Socket;
 import flash.system.Security;
 
+import flash.utils.Dictionary;
 import mx.utils.StringUtil;
 
 // result event is fired when the web service's response is received
@@ -67,10 +68,9 @@ public class RestHttpService extends EventDispatcher
     private var _server:String;
     private var _port:int;
     private var _policyFilePort:int;
-
-    [Inspectable(defaultValue="GET", enumeration="GET,POST,PUT,DELETE,HEAD,OPTIONS")]
     private var _method:String;
     private var _resource:String;
+    private var _queryString:Dictionary;
     private var _body:String;
     private var _contentType:String;
     private var _secure:Boolean;
@@ -200,6 +200,7 @@ public class RestHttpService extends EventDispatcher
      *
      * @return HTTP method
      */
+    [Inspectable(defaultValue="GET", enumeration="GET,POST,PUT,DELETE,HEAD,OPTIONS")]
     public function get method():String
     {
         return _method;
@@ -210,6 +211,7 @@ public class RestHttpService extends EventDispatcher
      *
      * @param method HTTP method
      */
+    [Inspectable(defaultValue="GET", enumeration="GET,POST,PUT,DELETE,HEAD,OPTIONS")]
     public function set method(method:String):void
     {
         _method = method;
@@ -232,7 +234,7 @@ public class RestHttpService extends EventDispatcher
      */
     public function set resource(resource:String):void
     {
-        _resource = escape(resource);
+        _resource = resource;
     }
 
     /**
@@ -317,10 +319,10 @@ public class RestHttpService extends EventDispatcher
      *
      * @param path Path to resource on which to perform the GET
      */
-    public function doGet(resource:String):void
+    public function doGet(resource:String, queryString:Dictionary=null):void
     {
         _contentType = null;
-        sendRequest(METHOD_GET, resource);
+        sendRequest(METHOD_GET, resource, queryString);
     }
 
     /**
@@ -328,10 +330,10 @@ public class RestHttpService extends EventDispatcher
      *
      * @param resource Path to resource on which to perform the POST
      */
-    public function doPost(resource:String, body:String, contentType:String=null):void
+    public function doPost(resource:String, body:String, contentType:String=null, queryString:Dictionary=null):void
     {
         _contentType = contentType;
-        sendRequest(METHOD_POST, resource, body);
+        sendRequest(METHOD_POST, resource, queryString, body);
     }
 
     /**
@@ -339,10 +341,10 @@ public class RestHttpService extends EventDispatcher
      *
      * @param resource Path to resource on which to perform the PUT
      */
-    public function doPut(resource:String, body:String, contentType:String=null):void
+    public function doPut(resource:String, body:String, contentType:String=null, queryString:Dictionary=null):void
     {
         _contentType = contentType;
-        sendRequest(METHOD_PUT, resource, body);
+        sendRequest(METHOD_PUT, resource, queryString, body);
     }
 
     /**
@@ -350,10 +352,10 @@ public class RestHttpService extends EventDispatcher
      *
      * @param resource Path to resource on which to perform the DELETE
      */
-    public function doDelete(resource:String):void
+    public function doDelete(resource:String, queryString:Dictionary=null):void
     {
         _contentType = null;
-        sendRequest(METHOD_DELETE, resource);
+        sendRequest(METHOD_DELETE, resource, queryString);
     }
 
     /**
@@ -361,10 +363,10 @@ public class RestHttpService extends EventDispatcher
      *
      * @param resource Path to resource on which to perform the HEAD
      */
-    public function doHead(resource:String):void
+    public function doHead(resource:String, queryString:Dictionary=null):void
     {
         _contentType = null;
-        sendRequest(METHOD_HEAD, resource, _body);
+        sendRequest(METHOD_HEAD, resource, queryString, _body);
     }
 
     /**
@@ -372,10 +374,10 @@ public class RestHttpService extends EventDispatcher
      *
      * @param resource Path to resource on which to perform the OPTIONS
      */
-    public function doOptions(resource:String, body:String=null):void
+    public function doOptions(resource:String, body:String=null, queryString:Dictionary=null):void
     {
         _contentType = null;
-        sendRequest(METHOD_OPTIONS, resource, body);
+        sendRequest(METHOD_OPTIONS, resource, queryString, body);
     }
 
     /**
@@ -383,9 +385,10 @@ public class RestHttpService extends EventDispatcher
      *
      * @param body Body of request
      */
-    public function send(body:String=null):void
+    public function send(body:String=null, queryString:Dictionary=null):void
     {
         _body = body;
+        _queryString = queryString;
         createSocket();
 
         if (_secure)
@@ -403,9 +406,10 @@ public class RestHttpService extends EventDispatcher
      *
      * @param method HTTP method
      * @param resource Path to resource
+     * @param queryString Query string
      * @param body Request body
      */
-    private function sendRequest(method:String, resource:String, body:String=null):void
+    private function sendRequest(method:String, resource:String, queryString:Dictionary=null, body:String=null):void
     {
         createSocket();
 
@@ -419,7 +423,8 @@ public class RestHttpService extends EventDispatcher
         }
 
         _method = method;
-        _resource = escape(resource);
+        _resource = resource;
+        _queryString = queryString;
         _body = body;
     }
 
@@ -432,11 +437,22 @@ public class RestHttpService extends EventDispatcher
     {
         _rawResponse = ""; //clear response buffer for each new socket connection
 
-        var requestLine:String = _method + " " + _resource + " HTTP/1.0\n";
+        var queryString:String = "";
+        for (var name:String in _queryString)
+        {
+            queryString += (queryString.length == 0 ? "?" : "&") + escape(name);
+
+            if (_queryString[name])
+            {
+                queryString += "=" + escape(_queryString[name]);
+            }
+        }
+
+        var requestLine:String = _method + " " + _resource + queryString + " HTTP/1.0\n";
 
         var now:Date = new Date();
-        var headers:String = "Date: " + DAYS[now.day] + ", " + now.date + " " + MONTHS[now.month] + " " +
-            now.fullYear + " " + now.hours + ":" + now.minutes + ":" + now.seconds + "\n";
+        var headers:String = "Date: " + DAYS[now.day] + ", " + now.date + " " + MONTHS[now.month] + " " + now.fullYear +
+            " " + now.hours + ":" + now.minutes + ":" + now.seconds + "\n";
 
         if (_contentType != null)
         {
