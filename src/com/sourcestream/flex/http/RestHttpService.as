@@ -232,7 +232,7 @@ public class RestHttpService extends EventDispatcher
      */
     public function set resource(resource:String):void
     {
-        _resource = resource;
+        _resource = escape(resource);
     }
 
     /**
@@ -419,7 +419,7 @@ public class RestHttpService extends EventDispatcher
         }
 
         _method = method;
-        _resource = resource;
+        _resource = escape(resource);
         _body = body;
     }
 
