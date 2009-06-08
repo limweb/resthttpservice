@@ -389,6 +389,7 @@ public class RestHttpService extends EventDispatcher
     {
         _body = body;
         _queryString = queryString;
+
         createSocket();
 
         if (_secure)
@@ -411,6 +412,11 @@ public class RestHttpService extends EventDispatcher
      */
     private function sendRequest(method:String, resource:String, queryString:Dictionary=null, body:String=null):void
     {
+        _method = method;
+        _resource = resource;
+        _queryString = queryString;
+        _body = body;
+
         createSocket();
 
         if (_secure)
@@ -421,11 +427,6 @@ public class RestHttpService extends EventDispatcher
         {
             _socket.connect(_server, _port);
         }
-
-        _method = method;
-        _resource = resource;
-        _queryString = queryString;
-        _body = body;
     }
 
     /**
