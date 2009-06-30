@@ -72,6 +72,13 @@ To use the RestHttpService component, add it to your library path and invoke it 
             putService.send("<body>body of put request</body>");
         }
 
+        function multiMethodServiceExample():void
+        {
+            //services defined without resource or method can invoke any method like this
+            multiMethodService.doGet("/books");
+            multiMethodService.doPost("/books", "<body>body of post request</body>");
+        }
+
         function dataHandler(event:HttpEvent):void
         {
             Alert.show(event.response.statusCode + " (" + event.response.statusMessage + ")\n\n" + event.data);
@@ -111,10 +118,13 @@ To use the RestHttpService component, add it to your library path and invoke it 
     <rest:RestHttpService id="putService" server="localhost" port="8080" method="{RestHttpService.METHOD_PUT}" resource="/books/1" contentType="application/xml" result="dataHandler(event)" fault="faultHandler(event)"/>
     <rest:RestHttpService id="deleteService" server="localhost" port="8080" method="{RestHttpService.METHOD_DELETE}" resource="/books/1" result="dataHandler(event)" fault="faultHandler(event)"/>
 
+    <rest:RestHttpService id="multiMethodService" server="localhost" port="8080" result="dataHandler(event)" fault="faultHandler(event)"/>
+
     <mx:Button click="getService.send()" label="Get"/>
     <mx:Button click="doPost()" label="Post"/>
     <mx:Button click="doPut()" label="Put"/>
     <mx:Button click="deleteService.send()" label="Delete"/>
+
 </mx:Application>
 }}}
 
