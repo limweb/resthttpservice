@@ -63,9 +63,9 @@ public class RestHttpService extends EventDispatcher
     private static const MONTHS:Array = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep",
             "Oct", "Nov", "Dec");
 
+    private var _server:String;
     private var _socket:Socket;
     private var _secureSocket:TLSSocket;
-    private var _server:String;
     private var _port:int;
     private var _policyFilePort:int;
     private var _method:String;
@@ -116,6 +116,7 @@ public class RestHttpService extends EventDispatcher
      *
      * @return Web service provider
      */
+    [Bindable]
     public function get server():String
     {
         return _server;
@@ -126,9 +127,11 @@ public class RestHttpService extends EventDispatcher
      *
      * @param server Web service provider
      */
+    [Bindable]
     public function set server(server:String):void
     {
         _server = server;
+        _policyFileLoaded = false;
     }
 
     /**
@@ -169,6 +172,7 @@ public class RestHttpService extends EventDispatcher
     public function set policyFilePort(policyFilePort:int):void
     {
         _policyFilePort = policyFilePort;
+        _policyFileLoaded = false;
     }
 
     /**
