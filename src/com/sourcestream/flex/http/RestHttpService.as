@@ -116,7 +116,6 @@ public class RestHttpService extends EventDispatcher
      *
      * @return Web service provider
      */
-    [Bindable]
     public function get server():String
     {
         return _server;
@@ -127,7 +126,6 @@ public class RestHttpService extends EventDispatcher
      *
      * @param server Web service provider
      */
-    [Bindable]
     public function set server(server:String):void
     {
         _server = server;
